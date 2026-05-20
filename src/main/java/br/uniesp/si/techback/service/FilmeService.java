@@ -39,6 +39,24 @@ public class FilmeService {
         }
     }
 
+    // ====================================================
+    // NOVO MÉTODO: Listar Filmes por ID da Categoria
+    // ====================================================
+    public List<FilmeDTO> listarPorCategoria(Long categoriaId) {
+        log.info("Buscando filmes cadastrados para a categoria ID: {}", categoriaId);
+        try {
+            List<Filme> filmes = filmeRepository.findByCategoriaId(categoriaId);
+            List<FilmeDTO> filmesDTO = filmes.stream()
+                    .map(filmeMapper::toDTO)
+                    .collect(Collectors.toList());
+            log.debug("Total de filmes encontrados para a categoria {}: {}", categoriaId, filmesDTO.size());
+            return filmesDTO;
+        } catch (Exception e) {
+            log.error("Falha ao buscar filmes para a categoria ID {}: {}", categoriaId, e.getMessage(), e);
+            throw e;
+        }
+    }
+
     /**
      * @param id o ID do filme.
      * @return o filme encontrado, ou lança uma exceção {@link RuntimeException} se o filme não existir.
@@ -128,5 +146,4 @@ public class FilmeService {
             throw e;
         }
     }
-
 }

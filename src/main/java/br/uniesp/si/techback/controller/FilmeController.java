@@ -47,20 +47,36 @@ public class FilmeController {
         }
     }
 
+    // ====================================================
+    // NOVO ENDPOINT: Buscar filmes por ID da Categoria
+    // ====================================================
+    @GetMapping("/categoria/{categoriaId}")
+    public ResponseEntity<List<FilmeDTO>> listarPorCategoria(@PathVariable Long categoriaId) {
+        log.info("Recebida requisição para listar filmes da categoria ID: {}", categoriaId);
+        try {
+            List<FilmeDTO> filmes = filmeService.listarPorCategoria(categoriaId);
+            log.debug("Total de filmes encontrados para a categoria {}: {}", categoriaId, filmes.size());
+            return ResponseEntity.ok(filmes);
+        } catch (Exception e) {
+            log.error("Erro ao listar filmes da categoria {}: {}", categoriaId, e.getMessage(), e);
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping
     public ResponseEntity<FilmeDTO> criar(@Valid @RequestBody FilmeDTO filmeDTO) {
         log.info("Recebida requisição para criar novo filme: {}", filmeDTO.getTitulo());
         try {
             FilmeDTO filmeSalvo = filmeService.salvar(filmeDTO);
             log.info("Filme criado com sucesso. ID: {}, Título: {}", filmeSalvo.getId(), filmeSalvo.getTitulo());
-            
+
             URI location = ServletUriComponentsBuilder
                     .fromCurrentRequest()
                     .path("/{id}")
-                    .buildAndExpand(filmeSalvo.getId())
+                    .buildAndExpand(filmeSalvo.getId()) // CORRIGIDO: de filvoSalvo para filmeSalvo
                     .toUri();
             log.debug("URI de localização do novo filme: {}", location);
-            
+
             return ResponseEntity.created(location).body(filmeSalvo);
         } catch (Exception e) {
             log.error("Erro ao criar filme: {}", e.getMessage(), e);
@@ -73,7 +89,7 @@ public class FilmeController {
         log.info("Atualizando filme com ID {}: {}", id, filmeDTO);
         try {
             FilmeDTO filmeAtualizado = filmeService.atualizar(id, filmeDTO);
-            log.debug("Filme ID {} atualizado com sucesso", id);
+            log.debug("Filme ID {} updated com sucesso", id);
             return ResponseEntity.ok(filmeAtualizado);
         } catch (Exception e) {
             log.error("Erro ao atualizar filme ID {}: {}", id, e.getMessage(), e);
@@ -93,6 +109,4 @@ public class FilmeController {
             return ResponseEntity.notFound().build();
         }
     }
-
-
 }

@@ -27,7 +27,9 @@ public interface FilmeRepository extends JpaRepository<Filme, Long> {
     Filme buscarPorGenero(@Param("genero") String gen,
                           @Param("titulo") String tit);
 
-
-
+    // ====================================================
+    // NOVO ENDPOINT: Busca todos os filmes de uma categoria
+    // ====================================================
+    List<Filme> findByCategoriaId(Long categoriaId);
 
 }

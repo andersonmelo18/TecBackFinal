@@ -6,13 +6,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "funcionarios")
-public class Funcionario {
+@Table(name = "usuarios")
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,12 +29,27 @@ public class Funcionario {
     @Column(nullable = false)
     private String senha;
 
-    @Column(length = 50)
-    private String cargo; // Ex: "ADMINISTRADOR", "MODERADOR"
+    @Column(nullable = false, unique = true, length = 14) // <--- NOVO CAMPO ADICIONADO (com limite seguro para conter pontos/traços se vier mascarado)
+    private String cpf;
 
+    @Column(name = "data_nascimento")
+    private LocalDate dataNascimento;
+
+    @Column(nullable = false)
+    private Boolean ativo = true;
+
+    @Column(length = 9)
     private String cep;
+
+    @Column(length = 150)
     private String logradouro;
+
+    @Column(length = 100)
     private String bairro;
-    private String localidade;
+
+    @Column(length = 100)
+    private String localidade; // Cidade
+
+    @Column(length = 2)
     private String uf;
 }

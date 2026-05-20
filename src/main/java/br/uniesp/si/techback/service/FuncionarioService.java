@@ -1,33 +1,49 @@
 package br.uniesp.si.techback.service;
 
 import br.uniesp.si.techback.client.ViaCepClient;
+import br.uniesp.si.techback.dto.FuncionarioDTO;
 import br.uniesp.si.techback.dto.ViaCepResponseDTO;
 import br.uniesp.si.techback.exception.CustomBeanException;
+import br.uniesp.si.techback.mapper.FuncionarioMapper;
 import br.uniesp.si.techback.model.Funcionario;
 import br.uniesp.si.techback.repository.FuncionarioRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FuncionarioService {
 
     private final FuncionarioRepository funcionarioRepository;
     private final ViaCepClient viaCepClient;
+    private final FuncionarioMapper funcionarioMapper;
 
-    public List<Funcionario> listar() {
-        return funcionarioRepository.findAll();
+    public List<FuncionarioDTO> listar() {
+        log.info("Buscando todos os funcionários administrativos");
+        return funcionarioRepository.findAll().stream()
+                .map(funcionarioMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public Funcionario incluir(Funcionario funcionario) {
+    @Transactional
+    public FuncionarioDTO incluir(FuncionarioDTO funcionarioDTO) {
+        log.info("Iniciando a inclusão de um novo funcionário: {}", funcionarioDTO.getNome());
+
+        Funcionario funcionario = funcionarioMapper.toEntity(funcionarioDTO);
+
         if (funcionario.getCep() != null && !funcionario.getCep().isBlank()) {
+            log.debug("Buscando dados de endereço no ViaCEP para o CEP: {}", funcionario.getCep());
             String cepLimpo = funcionario.getCep().replaceAll("\\D", "");
             ViaCepResponseDTO endereco = viaCepClient.buscarPorCep(cepLimpo);
 
-            // Exemplo simples para a turma: quando a API retorna erro, lancamos a excecao customizada.
             if (Boolean.TRUE.equals(endereco.getErro())) {
+                log.error("CEP inválido retornado pela API externa: {}", cepLimpo);
                 throw new CustomBeanException("CEP invalido para consulta no ViaCEP");
             }
 
@@ -36,9 +52,12 @@ public class FuncionarioService {
             funcionario.setBairro(endereco.getBairro());
             funcionario.setLocalidade(endereco.getLocalidade());
             funcionario.setUf(endereco.getUf());
+            log.debug("Endereço preenchido com sucesso para a localidade: {}", endereco.getLocalidade());
         }
 
-        return funcionarioRepository.save(funcionario);
+        Funcionario funcionarioSalvo = funcionarioRepository.save(funcionario);
+        log.info("Funcionário salvo com sucesso! ID gerado: {}", funcionarioSalvo.getId());
+
+        return funcionarioMapper.toDTO(funcionarioSalvo);
     }
 }
-

@@ -14,13 +14,20 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class FilmeDTO {
 
-
     private Long id;
+
     @NotBlank(message = "O título é obrigatório")
     private String titulo;
+
     private String sinopse;
     private LocalDate dataLancamento;
     private String genero;
     private Integer duracaoMinutos;
     private String classificacaoIndicativa;
+
+    // ====================================================
+    // NOVOS CAMPOS: Vinculam a Categoria automaticamente
+    // ====================================================
+    private Long categoriaId;
+    private String categoriaNome;
 }
