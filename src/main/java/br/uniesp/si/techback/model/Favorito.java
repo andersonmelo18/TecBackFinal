@@ -13,7 +13,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "favoritos")
+@Table(name = "favoritos", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"usuario_id", "filme_id"})
+})
 public class Favorito {
 
     @Id
@@ -30,10 +32,6 @@ public class Favorito {
 
     @Column(name = "adicionado_em", nullable = false)
     private LocalDateTime adicionadoEm;
-
-    @Table(uniqueConstraints = {
-            @UniqueConstraint(columnNames = {"usuario_id", "filme_id"})
-    })
 
     @PrePersist
     public void prePersist() {
