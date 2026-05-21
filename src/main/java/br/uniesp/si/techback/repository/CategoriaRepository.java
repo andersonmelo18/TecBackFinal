@@ -9,6 +9,5 @@ import java.util.Optional;
 @Repository
 public interface CategoriaRepository extends JpaRepository<Categoria, Long> {
 
-    // Utilizado para evitar a criação de categorias duplicadas com o mesmo nome
     Optional<Categoria> findByNomeIgnoreCase(String nome);
 }

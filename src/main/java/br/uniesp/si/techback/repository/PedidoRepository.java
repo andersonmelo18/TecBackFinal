@@ -9,6 +9,5 @@ import java.util.List;
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
-    // Busca todos os pedidos/assinaturas de um usuário específico
     List<Pedido> findByUsuarioId(Long usuarioId);
 }

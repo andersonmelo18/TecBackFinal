@@ -29,5 +29,5 @@ public class ItemPedidoDTO {
     @NotNull(message = "O ID do produto é obrigatório")
     private Long produtoId;
 
-    private String produtoNome; // Campo auxiliar para facilitar o retorno na API
+    private String produtoNome;
 }

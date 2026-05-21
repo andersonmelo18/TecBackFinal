@@ -85,10 +85,7 @@ public class UsuarioService {
 
         try {
             Usuario usuario = usuarioMapper.toEntity(usuarioDTO);
-
-            // --- APLICAÇÃO DO BCrypt (REQUISITO PROFESSOR) ---
             usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
-
             usuario.setAtivo(true);
             Usuario usuarioSalvo = usuarioRepository.save(usuario);
             log.info("Usuário cadastrado com sucesso. ID: {}", usuarioSalvo.getId());
@@ -130,10 +127,7 @@ public class UsuarioService {
                 .map(usuarioExistente -> {
                     usuarioDTO.setId(id);
                     Usuario usuarioParaAtualizar = usuarioMapper.toEntity(usuarioDTO);
-
-                    // --- APLICAÇÃO DO BCrypt NA ATUALIZAÇÃO (REQUISITO PROFESSOR) ---
                     usuarioParaAtualizar.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
-
                     Usuario usuarioSalvo = usuarioRepository.save(usuarioParaAtualizar);
                     log.info("Usuário ID: {} updated com sucesso.", id);
                     return usuarioSalvo;

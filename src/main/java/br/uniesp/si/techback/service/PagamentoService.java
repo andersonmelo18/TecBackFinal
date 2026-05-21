@@ -45,22 +45,18 @@ public class PagamentoService {
     public PagamentoDTO processarPagamento(PagamentoDTO pagamentoDTO) {
         log.info("Iniciando processamento de pagamento para o pedido ID: {}", pagamentoDTO.getPedidoId());
 
-        // 1. Validar se o pedido realmente existe
         Pedido pedido = pedidoRepository.findById(pagamentoDTO.getPedidoId())
                 .orElseThrow(() -> new RuntimeException("Pedido de assinatura não encontrado. ID: " + pagamentoDTO.getPedidoId()));
 
-        // 2. Converter DTO para Entidade e configurar metadados do pagamento
         Pagamento pagamento = pagamentoMapper.toEntity(pagamentoDTO);
         pagamento.setPedido(pedido);
         pagamento.setDataPagamento(LocalDateTime.now());
         pagamento.setStatus("CONCLUIDO"); // Simulação de aprovação imediata do pagamento (PIX/Cartão)
 
-        // 3. REGRA DE NEGÓCIO DA ASSINATURA: Se pagou, ativa o pedido do streaming!
         pedido.setStatus("ATIVO");
         pedidoRepository.save(pedido);
         log.info("Pedido ID {} atualizado para o status ATIVO. Assinatura liberada!", pedido.getId());
 
-        // 4. Salvar transação de pagamento
         Pagamento pagamentoSalvo = pagamentoRepository.save(pagamento);
         log.info("Pagamento ID {} registrado com sucesso no banco de dados", pagamentoSalvo.getId());
 

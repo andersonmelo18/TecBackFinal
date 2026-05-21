@@ -9,6 +9,5 @@ import java.util.List;
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
-    // Busca apenas os produtos/planos que estão ativos no catálogo
     List<Produto> findByAtivoTrue();
 }

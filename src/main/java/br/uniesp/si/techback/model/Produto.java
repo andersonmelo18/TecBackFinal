@@ -35,7 +35,6 @@ public class Produto {
     @Column(nullable = false)
     private BigDecimal preco;
 
-    // Novo campo adicionado para praticar validação de "faixa válida"
     @Min(value = 0, message = "O estoque não pode ser negativo")
     @Column(nullable = false)
     private Integer estoque = 0;
