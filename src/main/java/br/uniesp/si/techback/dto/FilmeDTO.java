@@ -24,10 +24,6 @@ public class FilmeDTO {
     private String genero;
     private Integer duracaoMinutos;
     private String classificacaoIndicativa;
-
-    // ====================================================
-    // NOVOS CAMPOS: Vinculam a Categoria automaticamente
-    // ====================================================
     private Long categoriaId;
     private String categoriaNome;
 }

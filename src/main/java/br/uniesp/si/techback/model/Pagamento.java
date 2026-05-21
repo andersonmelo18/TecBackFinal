@@ -28,10 +28,10 @@ public class Pagamento {
     private LocalDateTime dataPagamento;
 
     @Column(name = "forma_pagamento", nullable = false, length = 50)
-    private String formaPagamento; // Ex: "PIX", "CARTAO", "BOLETO"
+    private String formaPagamento;
 
     @Column(nullable = false, length = 30)
-    private String status; // Ex: "PENDENTE", "CONCLUIDO", "REJEITADO"
+    private String status;
 
     @OneToOne
     @JoinColumn(name = "pedido_id", nullable = false, unique = true)

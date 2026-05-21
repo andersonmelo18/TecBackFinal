@@ -29,7 +29,7 @@ public class Usuario {
     @Column(nullable = false)
     private String senha;
 
-    @Column(nullable = false, unique = true, length = 14) // <--- NOVO CAMPO ADICIONADO (com limite seguro para conter pontos/traços se vier mascarado)
+    @Column(nullable = false, unique = true, length = 14)
     private String cpf;
 
     @Column(name = "data_nascimento")
@@ -48,7 +48,7 @@ public class Usuario {
     private String bairro;
 
     @Column(length = 100)
-    private String localidade; // Cidade
+    private String localidade;
 
     @Column(length = 2)
     private String uf;

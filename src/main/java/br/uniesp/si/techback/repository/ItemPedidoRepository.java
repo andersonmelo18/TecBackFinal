@@ -9,6 +9,5 @@ import java.util.List;
 @Repository
 public interface ItemPedidoRepository extends JpaRepository<ItemPedido, Long> {
 
-    // Busca todos os itens que pertencem a um pedido específico
     List<ItemPedido> findByPedidoId(Long pedidoId);
 }

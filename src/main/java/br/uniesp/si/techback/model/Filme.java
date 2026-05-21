@@ -44,7 +44,7 @@ public class Filme {
 
     @Min(value = 0, message = "A nota deve ser no mínimo 0")
     @Max(value = 5, message = "A nota deve ser no máximo 5")
-    @Column(name = "relevancia") // Novo campo adicionado
+    @Column(name = "relevancia")
     private Integer relevancia;
 
     @Column(name = "classificacao_indicativa", length = 10)

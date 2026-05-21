@@ -28,7 +28,7 @@ public class Funcionario {
     private String senha;
 
     @Column(length = 50)
-    private String cargo; // Ex: "ADMINISTRADOR", "MODERADOR"
+    private String cargo;
 
     private String cep;
     private String logradouro;

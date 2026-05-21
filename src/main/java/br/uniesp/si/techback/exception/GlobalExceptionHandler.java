@@ -13,9 +13,6 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    /**
-     * Mantem o retorno 400 para erros de validacao de entrada.
-     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException ex,
                                                                          HttpServletRequest request) {
@@ -37,9 +34,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(body);
     }
 
-    /**
-     * Trata a excecao customizada da aplicacao e retorna 400.
-     */
     @ExceptionHandler(CustomBeanException.class)
     public ResponseEntity<Map<String, Object>> handleCustomBeanException(CustomBeanException ex,
                                                                           HttpServletRequest request) {
@@ -51,9 +45,7 @@ public class GlobalExceptionHandler {
         body.put("path", request.getRequestURI());
         return ResponseEntity.badRequest().body(body);
     }
-    /**
-     * Fallback simples para qualquer erro nao tratado.
-     */
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex,
                                                                        HttpServletRequest request) {

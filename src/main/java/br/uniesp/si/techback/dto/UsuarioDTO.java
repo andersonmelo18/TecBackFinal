@@ -27,17 +27,14 @@ public class UsuarioDTO {
     private String email;
 
     @NotBlank(message = "A senha é obrigatória")
-    @SenhaForte // <--- NOSSO CUSTOM VALIDATOR CRIADO DO ZERO!
+    @SenhaForte
     private String senha;
 
     @NotBlank(message = "O CPF é obrigatório")
-    @CPF(message = "CPF inválido. Certifique-se de digitar um CPF real com dígitos válidos") // <--- REQUISITO DO PROFESSOR!
+    @CPF(message = "CPF inválido. Certifique-se de digitar um CPF real com dígitos válidos")
     private String cpf;
-
     private LocalDate dataNascimento;
     private Boolean ativo;
-
-    // --- NOVOS CAMPOS PARA INTEGRAÇÃO COM VIACEP ---
     private String cep;
     private String logradouro;
     private String bairro;

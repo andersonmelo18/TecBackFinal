@@ -41,7 +41,6 @@ public class PedidoService {
         try {
             Pedido pedido = pedidoMapper.toEntity(pedidoDTO);
 
-            // Configurações padrão de um novo pedido
             pedido.setDataPedido(LocalDateTime.now());
             pedido.setStatus("AGUARDANDO_PAGAMENTO");
 

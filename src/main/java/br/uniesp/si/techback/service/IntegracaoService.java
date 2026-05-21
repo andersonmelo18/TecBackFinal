@@ -12,10 +12,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class IntegracaoService {
 
-    // Injetamos todos os seus clientes aqui
     private final ViaCepClient viaCepClient;
     private final BrasilApiClient brasilApiClient;
     private final TmdbClient tmdbClient;
 
-    // Métodos para orquestrar as chamadas...
+
 }

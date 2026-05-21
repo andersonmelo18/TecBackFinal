@@ -28,7 +28,7 @@ public class Pedido {
     private BigDecimal valorTotal;
 
     @Column(nullable = false, length = 30)
-    private String status; // Ex: "AGUARDANDO_PAGAMENTO", "ATIVO", "CANCELADO"
+    private String status;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)

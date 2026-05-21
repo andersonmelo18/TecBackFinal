@@ -39,9 +39,6 @@ public class FilmeService {
         }
     }
 
-    // ====================================================
-    // NOVO MÉTODO: Listar Filmes por ID da Categoria
-    // ====================================================
     public List<FilmeDTO> listarPorCategoria(Long categoriaId) {
         log.info("Buscando filmes cadastrados para a categoria ID: {}", categoriaId);
         try {
@@ -57,10 +54,6 @@ public class FilmeService {
         }
     }
 
-    /**
-     * @param id o ID do filme.
-     * @return o filme encontrado, ou lança uma exceção {@link RuntimeException} se o filme não existir.
-     */
     public FilmeDTO buscarPorId(Long id) {
         log.info("Buscando filme pelo ID: {}", id);
         Filme filme = filmeRepository.findById(id)
@@ -76,25 +69,15 @@ public class FilmeService {
         return filmeMapper.toDTO(filme);
     }
 
-    /**
-     * Atualiza um filme existente.
-     *
-     * @param id    o ID do filme a ser atualizado.
-     * @param filme o filme com as informações atualizadas.
-     * @return o filme atualizado.
-     */
     @Transactional
     public FilmeDTO atualizar(Long id, FilmeDTO filmeDTO) {
         log.info("Atualizando filme ID: {}", id);
         Filme filmeAtualizado = filmeRepository.findById(id)
                 .map(filmeExistente -> {
-                    log.debug("Dados atuais do filme: {}", filmeExistente);
-                    log.debug("Novos dados: {}", filmeDTO);
                     filmeDTO.setId(id);
                     Filme filmeParaAtualizar = filmeMapper.toEntity(filmeDTO);
                     Filme filmeSalvo = filmeRepository.save(filmeParaAtualizar);
-                    log.info("Filme ID: {} atualizado com sucesso. Novo título: {}",
-                            id, filmeSalvo.getTitulo());
+                    log.info("Filme ID: {} atualizado com sucesso. Novo título: {}", id, filmeSalvo.getTitulo());
                     return filmeSalvo;
                 })
                 .orElseThrow(() -> {
@@ -105,12 +88,6 @@ public class FilmeService {
         return filmeMapper.toDTO(filmeAtualizado);
     }
 
-    /**
-     * Salva um novo filme.
-     *
-     * @param filme o filme a ser salvo.
-     * @return o filme salvo.
-     */
     @Transactional
     public FilmeDTO salvar(FilmeDTO filmeDTO) {
         log.info("Salvando novo filme: {}", filmeDTO.getTitulo());
@@ -125,11 +102,6 @@ public class FilmeService {
         }
     }
 
-    /**
-     * Exclui um filme existente.
-     *
-     * @param id o ID do filme a ser excluído.
-     */
     @Transactional
     public void excluir(Long id) {
         log.info("Excluindo filme ID: {}", id);
@@ -145,5 +117,52 @@ public class FilmeService {
             log.error("Erro ao excluir filme ID {}: {}", id, e.getMessage(), e);
             throw e;
         }
+    }
+
+    public List<FilmeDTO> buscarPorGenero(String genero) {
+        log.info("Buscando filmes pelo gênero: '{}'", genero);
+        List<Filme> filmes = filmeRepository.buscarPorGeneroCaseInsensitive(genero.trim());
+        log.debug("Filmes encontrados para o gênero '{}': {}", genero, filmes.size());
+        return filmes.stream().map(filmeMapper::toDTO).collect(Collectors.toList());
+    }
+
+    public List<FilmeDTO> buscarTopNPorRelevancia(int n) {
+        log.info("Buscando top {} filmes por relevância", n);
+        if (n <= 0) {
+            throw new IllegalArgumentException("O valor de N deve ser maior que zero.");
+        }
+        List<Filme> filmes = filmeRepository.buscarTopNPorRelevancia(n);
+        log.debug("Top {} filmes retornados: {}", n, filmes.size());
+        return filmes.stream().map(filmeMapper::toDTO).collect(Collectors.toList());
+    }
+
+    public List<FilmeDTO> buscarLancadosAposAno(int ano) {
+        log.info("Buscando filmes lançados após o ano {}", ano);
+        if (ano < 1888) {
+            throw new IllegalArgumentException("O ano informado é inválido. O cinema surgiu em 1888.");
+        }
+        List<Filme> filmes = filmeRepository.buscarLancadosAposAno(ano);
+        log.debug("Filmes encontrados após {}: {}", ano, filmes.size());
+        return filmes.stream().map(filmeMapper::toDTO).collect(Collectors.toList());
+    }
+
+    public List<FilmeDTO> buscarFavoritosRecentes(Long usuarioId, int limite) {
+        log.info("Buscando os {} favoritos mais recentes do usuário ID: {}", limite, usuarioId);
+        if (limite <= 0) {
+            limite = 10;
+        }
+        List<Filme> filmes = filmeRepository.buscarFavoritosRecentesDoUsuario(usuarioId, limite);
+        log.debug("Favoritos recentes encontrados para usuário {}: {}", usuarioId, filmes.size());
+        return filmes.stream().map(filmeMapper::toDTO).collect(Collectors.toList());
+    }
+
+    public List<FilmeDTO> buscarPorPalavraChave(String palavraChave) {
+        log.info("Buscando filmes com a palavra-chave: '{}'", palavraChave);
+        if (palavraChave == null || palavraChave.isBlank()) {
+            throw new IllegalArgumentException("A palavra-chave não pode ser vazia.");
+        }
+        List<Filme> filmes = filmeRepository.buscarPorPalavraChave(palavraChave.trim());
+        log.debug("Filmes encontrados para '{}': {}", palavraChave, filmes.size());
+        return filmes.stream().map(filmeMapper::toDTO).collect(Collectors.toList());
     }
 }
