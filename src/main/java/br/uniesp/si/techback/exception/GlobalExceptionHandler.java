@@ -6,6 +6,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.slf4j.MDC;
+
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -22,6 +24,7 @@ public class GlobalExceptionHandler {
         body.put("error", "Bad Request");
         body.put("message", "Dados invalidos na requisicao");
         body.put("path", request.getRequestURI());
+        body.put("correlationId", MDC.get("correlationId"));
 
         Map<String, String> fieldErrors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach(error -> {
@@ -43,6 +46,7 @@ public class GlobalExceptionHandler {
         body.put("error", "Bad Request");
         body.put("message", ex.getMessage());
         body.put("path", request.getRequestURI());
+        body.put("correlationId", MDC.get("correlationId"));
         return ResponseEntity.badRequest().body(body);
     }
 
@@ -55,6 +59,7 @@ public class GlobalExceptionHandler {
         body.put("error", "Internal Server Error");
         body.put("message", "Erro interno inesperado");
         body.put("path", request.getRequestURI());
+        body.put("correlationId", MDC.get("correlationId"));
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
     }
 }

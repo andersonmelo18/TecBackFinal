@@ -8,6 +8,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,6 +36,18 @@ public class ProdutoService {
                 .map(produtoMapper::toDTO)
                 .collect(Collectors.toList());
     }
+public Page<ProdutoDTO> listarPaginado(boolean apenasAtivos, int page, int size) {
+
+    log.info("Buscando produtos paginados. Página: {}, Tamanho: {}", page, size);
+
+    Pageable pageable = PageRequest.of(page, size);
+
+    Page<Produto> produtos = apenasAtivos
+            ? produtoRepository.findByAtivoTrue(pageable)
+            : produtoRepository.findAll(pageable);
+
+    return produtos.map(produtoMapper::toDTO);
+}
 
     public ProdutoDTO buscarPorId(Long id) {
         log.info("Buscando produto pelo ID: {}", id);

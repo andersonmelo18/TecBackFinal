@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 @RestController
 @RequestMapping("/produtos")
@@ -20,12 +20,20 @@ public class ProdutoController {
 
     private final ProdutoService produtoService;
 
-    @GetMapping
-    public ResponseEntity<List<ProdutoDTO>> listar(@RequestParam(value = "ativos", required = false, defaultValue = "false") boolean apenasAtivos) {
-        log.info("Recebida requisição GET para listar produtos. Apenas ativos? {}", apenasAtivos);
-        List<ProdutoDTO> produtos = apenasAtivos ? produtoService.listarAtivos() : produtoService.listarTodos();
-        return ResponseEntity.ok(produtos);
-    }
+@GetMapping
+public ResponseEntity<Page<ProdutoDTO>> listar(
+        @RequestParam(value = "ativos", required = false, defaultValue = "false") boolean apenasAtivos,
+        @RequestParam(value = "page", defaultValue = "0") int page,
+        @RequestParam(value = "size", defaultValue = "10") int size
+) {
+    log.info("Listando produtos. Página: {}, Tamanho: {}, Apenas ativos? {}",
+            page, size, apenasAtivos);
+
+    Page<ProdutoDTO> produtos =
+            produtoService.listarPaginado(apenasAtivos, page, size);
+
+    return ResponseEntity.ok(produtos);
+}
 
     @GetMapping("/{id}")
     public ResponseEntity<ProdutoDTO> buscarPorId(@PathVariable Long id) {
