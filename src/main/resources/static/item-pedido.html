@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Itens do Pedido - iespflix</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Estilos padronizados do painel */
+        .card-form { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .form-row { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .form-group { margin-bottom: 15px; flex: 1; min-width: 200px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; color: #555; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-family: inherit; box-sizing: border-box; }
+
+        /* Inputs com botão de busca lateral */
+        .input-group { display: flex; gap: 8px; }
+        .btn-busca-lateral { background: #007bff; color: white; border: none; padding: 0 15px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; white-space: nowrap; }
+        .btn-busca-lateral:hover { background: #0056b3; }
+
+        .btn-salvar { background: #E50914; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-salvar:hover { background: #b20710; }
+
+        .tabela-container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background-color: #f8f9fa; color: #333; font-weight: 600; }
+        .tabela-container td { white-space: nowrap; vertical-align: middle; }
+
+        .btn-excluir { background: #dc3545; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
+        .btn-excluir:hover { background: #c82333; }
+        .btn-selecionar { background: #28a745; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
+        .btn-selecionar:hover { background: #218838; }
+
+        .table-actions { display: flex; justify-content: flex-end; margin-bottom: 15px; }
+        .search-container { position: relative; width: 300px; }
+        .search-container input { width: 100%; padding: 8px 15px; border: 1px solid #ddd; border-radius: 20px; font-size: 14px; box-sizing: border-box; }
+
+        /* Modais */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background-color: white; padding: 30px; border-radius: 8px; width: 650px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); position: relative; font-family: inherit; }
+        .fechar-modal { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #aaa; }
+        .fechar-modal:hover { color: #000; }
+
+        .scroll-table { max-height: 300px; overflow-y: auto; margin-top: 15px; border: 1px solid #eee; border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+
+    <aside class="sidebar">
+        <div class="logo">
+            <h2>iesp<span>flix</span></h2>
+            <small>Painel de Controle</small>
+        </div>
+
+        <nav class="menu">
+            <p class="menu-titulo">Principal</p>
+            <ul>
+                <li><a href="index.html">🏠 Dashboard</a></li>
+            </ul>
+
+            <p class="menu-titulo">🎥 Streaming</p>
+            <ul>
+                <li><a href="filmes.html">Filmes</a></li>
+                <li><a href="categorias.html">Categorias</a></li>
+                <li><a href="favoritos.html">Favoritos</a></li>
+            </ul>
+
+            <p class="menu-titulo">🛒 E-commerce & Vendas</p>
+            <ul>
+                <li><a href="assinaturas.html">Assinaturas</a></li>
+                <li><a href="produtos.html">Produtos</a></li>
+                <li><a href="pedidos.html">Pedidos</a></li>
+                <li><a href="item-pedido.html" class="active">Itens do Pedido</a></li>
+                <li><a href="pagamentos.html">Pagamentos</a></li>
+            </ul>
+
+            <p class="menu-titulo">👥 Gestão & RH</p>
+            <ul>
+                <li><a href="usuarios.html">Usuários (Clientes)</a></li>
+                <li><a href="funcionarios.html">Funcionários</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="conteudo-principal">
+        <header class="topo-painel">
+            <div>
+                <h1>Vínculo de Itens do Pedido</h1>
+                <p class="subtitulo">Adicione ou remova produtos e quantidades associadas a um pedido específico.</p>
+            </div>
+        </header>
+
+        <section class="card-form">
+            <h2>Adicionar Item ao Pedido</h2>
+            <br>
+            <form id="form-item-pedido">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="pedidoId">ID do Pedido</label>
+                        <div class="input-group">
+                            <input type="number" id="pedidoId" required placeholder="Selecione o pedido" readonly style="background-color: #f8f9fa;">
+                            <button type="button" id="btn-buscar-pedido" class="btn-busca-lateral">🔍 Buscar Pedido</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="flex: 1.5;">
+                        <label for="produtoNome">Produto Selecionado</label>
+                        <div class="input-group">
+                            <input type="hidden" id="produtoId">
+                            <input type="text" id="produtoNome" required placeholder="Selecione o produto" readonly style="background-color: #f8f9fa;">
+                            <button type="button" id="btn-buscar-produto" class="btn-busca-lateral">🔍 Buscar Produto</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="precoUnitario">Preço Unitário (R$)</label>
+                        <input type="number" id="precoUnitario" step="0.01" required placeholder="Ex: 29.90">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quantidade">Quantidade</label>
+                        <input type="number" id="quantidade" min="1" required placeholder="Ex: 2">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-salvar">Adicionar Produto ao Pedido</button>
+            </form>
+        </section>
+
+        <section class="tabela-container">
+            <h2>Itens Registrados nos Pedidos</h2>
+            <div class="table-actions">
+                <div class="search-container">
+                    <input type="text" id="pesquisa-item" placeholder="Buscar por ID do Pedido ou Produto...">
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>ID Item</th>
+                    <th>ID Pedido</th>
+                    <th>Produto</th>
+                    <th>Preço Unitário</th>
+                    <th>Qtd</th>
+                    <th>Subtotal</th>
+                    <th>Ações</th>
+                </tr>
+                </thead>
+                <tbody id="tabela-itens-pedido">
+                </tbody>
+            </table>
+        </section>
+    </main>
+</div>
+
+<div class="modal" id="modal-buscar-pedido">
+    <div class="modal-content">
+        <span class="fechar-modal" id="fechar-modal-pedido">&times;</span>
+        <h3 style="margin-top: 0; margin-bottom: 10px; color: #222;">Selecione um Pedido</h3>
+        <div class="search-container" style="width: 100%; margin-bottom: 10px;">
+            <input type="text" id="pesquisa-pedido-modal" placeholder="Filtre por ID do pedido ou status...">
+        </div>
+        <div class="scroll-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID Pedido</th>
+                    <th>Cliente</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Ação</th>
+                </tr>
+                </thead>
+                <tbody id="tabela-pedidos-modal">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="modal-buscar-produto">
+    <div class="modal-content">
+        <span class="fechar-modal" id="fechar-modal-produto">&times;</span>
+        <h3 style="margin-top: 0; margin-bottom: 10px; color: #222;">Selecione um Produto</h3>
+        <div class="search-container" style="width: 100%; margin-bottom: 10px;">
+            <input type="text" id="pesquisa-produto-modal" placeholder="Busque pelo nome do produto...">
+        </div>
+        <div class="scroll-table">
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome do Produto</th>
+                    <th>Preço Sugerido</th>
+                    <th style="text-align: right;">Ação</th>
+                </tr>
+                </thead>
+                <tbody id="tabela-produtos-modal">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="js/item-pedido.js"></script>
+</body>
+</html>
