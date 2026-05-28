@@ -9,7 +9,7 @@ import br.uniesp.si.techback.repository.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // IMPORTANTE
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
     private final ViaCepClient viaCepClient;
-    private final BCryptPasswordEncoder passwordEncoder; // Injeção via Lombok (construtor)
+    private final org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     public List<UsuarioDTO> listar() {
         log.info("Buscando todos os usuários cadastrados no IespFlix");
@@ -87,9 +87,12 @@ public class UsuarioService {
             Usuario usuario = usuarioMapper.toEntity(usuarioDTO);
             usuario.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
             usuario.setAtivo(true);
+
             Usuario usuarioSalvo = usuarioRepository.save(usuario);
             log.info("Usuário cadastrado com sucesso. ID: {}", usuarioSalvo.getId());
-            return usuarioMapper.toDTO(usuarioSalvo);
+            UsuarioDTO retorno = usuarioMapper.toDTO(usuarioSalvo);
+            retorno.setSenha(null);
+            return retorno;
         } catch (Exception e) {
             log.error("Falha ao salvar usuário: {}", e.getMessage(), e);
             throw e;
