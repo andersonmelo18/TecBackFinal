@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List; // Importação necessária para a listagem
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -19,6 +21,12 @@ public class FavoritoService {
     private final FavoritoRepository favoritoRepository;
     private final UsuarioRepository usuarioRepository;
     private final FilmeRepository filmeRepository;
+
+    // NOVO MÉTODO: Adicionado para alimentar a tabela do seu Frontend
+    public List<Favorito> listar() {
+        log.info("Buscando todos os registros de favoritos no banco de dados");
+        return favoritoRepository.findAll();
+    }
 
     @Transactional
     public void adicionarFavorito(Long usuarioId, Long filmeId) {

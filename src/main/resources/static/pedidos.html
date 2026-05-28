@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Pedidos - iespflix</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .card-form { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .form-row { display: flex; gap: 15px; }
+        .form-group { margin-bottom: 15px; flex: 1; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; color: #555; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-family: inherit; }
+        .btn-salvar { background: #E50914; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-salvar:hover { background: #b20710; }
+
+        .tabela-container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background-color: #f8f9fa; color: #333; font-weight: 600; }
+        .btn-excluir { background: #dc3545; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .btn-excluir:hover { background: #c82333; }
+
+        /* Cores para os status dos pedidos */
+        .status { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; color: #fff; }
+        .status-pendente { background-color: #f39c12; }
+        .status-concluido { background-color: #27ae60; }
+        .status-cancelado { background-color: #c0392b; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+
+    <aside class="sidebar">
+        <div class="logo">
+            <h2>iesp<span>flix</span></h2>
+            <small>Painel de Controle</small>
+        </div>
+
+        <nav class="menu">
+            <p class="menu-titulo">Principal</p>
+            <ul>
+                <li><a href="index.html">🏠 Dashboard</a></li>
+            </ul>
+
+            <p class="menu-titulo">🎥 Streaming</p>
+            <ul>
+                <li><a href="filmes.html">Filmes</a></li>
+                <li><a href="categorias.html">Categorias</a></li>
+                <li><a href="favoritos.html">Favoritos</a></li>
+            </ul>
+
+            <p class="menu-titulo">🛒 E-commerce & Vendas</p>
+            <ul>
+                <li><a href="assinaturas.html">Assinaturas</a></li>
+                <li><a href="produtos.html">Produtos</a></li>
+                <li><a href="pedidos.html" class="active">Pedidos</a></li>
+                <li><a href="item-pedido.html">Itens do Pedido</a></li>
+                <li><a href="pagamentos.html">Pagamentos</a></li>
+            </ul>
+
+            <p class="menu-titulo">👥 Gestão & RH</p>
+            <ul>
+                <li><a href="usuarios.html">Usuários (Clientes)</a></li>
+                <li><a href="funcionarios.html">Funcionários</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="conteudo-principal">
+
+        <header class="topo-painel">
+            <div>
+                <h1>Controle de Pedidos</h1>
+                <p class="subtitulo">Acompanhe as compras realizadas na loja do sistema.</p>
+            </div>
+        </header>
+
+        <section class="card-form">
+            <h2>Criar Novo Pedido Manualmente</h2>
+            <br>
+            <form id="form-pedido">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="usuarioId">ID do Usuário/Cliente</label>
+                        <input type="number" id="usuarioId" required placeholder="Ex: 1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status">Status do Pedido</label>
+                        <select id="status" required>
+                            <option value="PENDENTE">Pendente</option>
+                            <option value="CONCLUIDO">Concluído</option>
+                            <option value="CANCELADO">Cancelado</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="valorTotal">Valor Total (R$)</label>
+                        <input type="number" id="valorTotal" step="0.01" required placeholder="Ex: 150.50">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-salvar">Registrar Pedido</button>
+            </form>
+        </section>
+
+        <section class="tabela-container">
+            <h2>Todos os Pedidos</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID do Pedido</th>
+                    <th>ID do Cliente</th>
+                    <th>Status</th>
+                    <th>Valor Total</th>
+                    <th>Ações</th>
+                </tr>
+                </thead>
+                <tbody id="tabela-pedidos">
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+</div>
+
+<script src="js/pedidos.js"></script>
+</body>
+</html>

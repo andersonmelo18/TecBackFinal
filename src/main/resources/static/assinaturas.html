@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Assinaturas - iespflix</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Estilos específicos para formulários e tabelas */
+        .card-form { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; color: #555; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+        .btn-salvar { background: #E50914; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-salvar:hover { background: #b20710; }
+
+        .tabela-container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background-color: #f8f9fa; color: #333; font-weight: 600; }
+        .btn-excluir { background: #dc3545; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .btn-excluir:hover { background: #c82333; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-container">
+
+    <aside class="sidebar">
+        <div class="logo">
+            <h2>iesp<span>flix</span></h2>
+            <small>Painel de Controle</small>
+        </div>
+
+        <nav class="menu">
+            <p class="menu-titulo">Principal</p>
+            <ul>
+                <li><a href="index.html">🏠 Dashboard</a></li>
+            </ul>
+
+            <p class="menu-titulo">🎥 Streaming</p>
+            <ul>
+                <li><a href="filmes.html">Filmes</a></li>
+                <li><a href="categorias.html">Categorias</a></li>
+                <li><a href="favoritos.html">Favoritos</a></li>
+            </ul>
+
+            <p class="menu-titulo">🛒 E-commerce & Vendas</p>
+            <ul>
+                <li><a href="assinaturas.html" class="active">Assinaturas</a></li>
+                <li><a href="produtos.html">Produtos</a></li>
+                <li><a href="pedidos.html">Pedidos</a></li>
+                <li><a href="item-pedido.html">Itens do Pedido</a></li>
+                <li><a href="pagamentos.html">Pagamentos</a></li>
+            </ul>
+
+            <p class="menu-titulo">👥 Gestão & RH</p>
+            <ul>
+                <li><a href="usuarios.html">Usuários (Clientes)</a></li>
+                <li><a href="funcionarios.html">Funcionários</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="conteudo-principal">
+
+        <header class="topo-painel">
+            <div>
+                <h1>Planos de Assinatura</h1>
+                <p class="subtitulo">Cadastre e gerencie os planos oferecidos aos clientes.</p>
+            </div>
+        </header>
+
+        <section class="card-form">
+            <h2>Novo Plano</h2>
+            <br>
+            <form id="form-assinatura">
+                <div class="form-group">
+                    <label for="nome">Nome do Plano (ex: Padrão, Premium)</label>
+                    <input type="text" id="nome" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="preco">Preço Mensal (R$)</label>
+                    <input type="number" id="preco" step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="descricao">Descrição (ex: 4K + 4 Telas)</label>
+                    <input type="text" id="descricao" required>
+                </div>
+
+                <button type="submit" class="btn-salvar">Salvar Plano</button>
+            </form>
+        </section>
+
+        <section class="tabela-container">
+            <h2>Planos Cadastrados</h2>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome do Plano</th>
+                    <th>Descrição</th>
+                    <th>Preço</th>
+                    <th>Ações</th>
+                </tr>
+                </thead>
+                <tbody id="tabela-assinaturas">
+                </tbody>
+            </table>
+        </section>
+
+    </main>
+</div>
+
+<script src="js/assinaturas.js"></script>
+</body>
+</html>

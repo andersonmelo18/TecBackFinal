@@ -41,4 +41,17 @@ public class FavoritoController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping
+    public ResponseEntity<?> listar() {
+        log.info("Requisição para listar todos os filmes favoritados");
+        try {
+            // ATENÇÃO: Verifique no seu FavoritoService qual é o nome do método que lista
+            // todos os favoritos (pode ser listar(), listarTodos(), buscarTodos(), etc.)
+            return ResponseEntity.ok(favoritoService.listar());
+        } catch (Exception e) {
+            log.error("Erro ao listar favoritos: {}", e.getMessage());
+            return ResponseEntity.internalServerError().body("Erro ao carregar listagem");
+        }
+    }
 }
