@@ -1,24 +1,43 @@
 // URL apontando para o seu CategoriaController no Spring Boot
 const URL_API = '/categorias';
 
-// 1. Função para buscar (GET) e listar na tabela
+// Cache local para guardar os dados das categorias (importante para os modais)
+let cacheCategorias = [];
+
+// ==========================================
+// 1. CARREGAR E RENDERIZAR TABELA (GET)
+// ==========================================
 async function carregarCategorias() {
     try {
         const resposta = await fetch(URL_API);
         const dados = await resposta.json();
 
-        const corpoTabela = document.getElementById('tabela-categorias');
-        corpoTabela.innerHTML = ''; // Limpa a tabela antes de renderizar os novos dados
+        // Armazena no cache tratando paginação do Spring (Pageable) se houver
+        cacheCategorias = dados.content ? dados.content : dados;
 
-        dados.forEach(categoria => {
+        const corpoTabela = document.getElementById('tabela-categorias');
+        corpoTabela.innerHTML = '';
+
+        if (cacheCategorias.length === 0) {
+            corpoTabela.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#888; padding: 20px;">Nenhuma categoria cadastrada.</td></tr>`;
+            return;
+        }
+
+        cacheCategorias.forEach(categoria => {
             const linha = document.createElement('tr');
 
+            // Tratamento seguro de strings para evitar que aspas simples/duplas quebrem o HTML do onclick
+            const descricaoTratada = (categoria.descricao || "Sem descrição informada.")
+                .replace(/\\/g, '\\\\')
+                .replace(/'/g, "\\'")
+                .replace(/"/g, '&quot;');
+
             linha.innerHTML = `
-                <td>${categoria.id}</td>
+                <td><strong>#${categoria.id}</strong></td>
                 <td><strong>${categoria.nome}</strong></td>
-                <td>${categoria.descricao}</td>
                 <td>
-                    <button class="btn-excluir" onclick="deletarCategoria(${categoria.id})">Excluir</button>
+                    <button type="button" class="btn-lupa" onclick="abrirModalDescricao('${categoria.nome.replace(/'/g, "\\'")}', '${descricaoTratada}')">🔍 Detalhes</button>
+                    <button type="button" class="btn-excluir" onclick="deletarCategoria(${categoria.id})">Excluir</button>
                 </td>
             `;
             corpoTabela.appendChild(linha);
@@ -28,15 +47,33 @@ async function carregarCategorias() {
     }
 }
 
-// 2. Função para salvar (POST) uma nova categoria
+// ==========================================
+// 2. CONTROLAR O MODAL DE DETALHES
+// ==========================================
+const modal = document.getElementById('modal-descricao');
+const btnFecharModal = document.getElementById('btn-fechar-modal');
+
+function abrirModalDescricao(nome, descricao) {
+    document.getElementById('modal-titulo-categoria').innerText = `Gênero: ${nome}`;
+    document.getElementById('modal-texto-descricao').innerText = descricao;
+    modal.style.display = 'flex';
+}
+
+// Eventos para fechar o modal clicando no 'X' ou fora da caixa branca
+btnFecharModal.addEventListener('click', () => modal.style.display = 'none');
+window.addEventListener('click', (event) => {
+    if (event.target === modal) modal.style.display = 'none';
+});
+
+// ==========================================
+// 3. SALVAR NOVA CATEGORIA (POST)
+// ==========================================
 document.getElementById('form-categoria').addEventListener('submit', async function(event) {
-    event.preventDefault(); // Impede o recarregamento padrão do formulário
+    event.preventDefault();
 
-    // Coleta os valores digitados no HTML
-    const nomeCategoria = document.getElementById('nome').value;
-    const descricaoCategoria = document.getElementById('descricao').value;
+    const nomeCategoria = document.getElementById('nome').value.trim();
+    const descricaoCategoria = document.getElementById('descricao').value.trim();
 
-    // Cria o objeto JSON de acordo com sua entidade Categoria no Java
     const novaCategoria = {
         nome: nomeCategoria,
         descricao: descricaoCategoria
@@ -45,18 +82,15 @@ document.getElementById('form-categoria').addEventListener('submit', async funct
     try {
         const resposta = await fetch(URL_API, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(novaCategoria)
         });
 
         if (resposta.ok) {
             alert("Categoria salva com sucesso!");
-            document.getElementById('form-categoria').reset(); // Limpa os campos do formulário
-            carregarCategorias(); // Recarrega a tabela imediatamente
+            document.getElementById('form-categoria').reset();
+            carregarCategorias(); // Recarrega a tabela e atualiza o cache
         } else {
-            // Caso falhe alguma validação do backend (@NotBlank, etc)
             const erroApi = await resposta.text();
             alert("Erro ao salvar a categoria: " + erroApi);
         }
@@ -66,16 +100,18 @@ document.getElementById('form-categoria').addEventListener('submit', async funct
     }
 });
 
-// 3. Função para deletar (DELETE) uma categoria
+// ==========================================
+// 4. DELETAR CATEGORIA (DELETE)
+// ==========================================
 async function deletarCategoria(id) {
-    if (confirm(`Tem certeza que deseja excluir a categoria ID ${id}?`)) {
+    if (confirm(`Tem certeza que deseja excluir a categoria ID #${id}?`)) {
         try {
             const resposta = await fetch(`${URL_API}/${id}`, { method: 'DELETE' });
 
             if (resposta.ok) {
-                carregarCategorias(); // Atualiza a tabela se a exclusão for bem sucedida
+                carregarCategorias();
             } else {
-                alert("Não foi possível excluir a categoria. Verifique se existem filmes vinculados a ela.");
+                alert("Não foi possível excluir a categoria. Verifique se existem filmes vinculados a ela no seu banco de dados.");
             }
         } catch (erro) {
             console.error("Erro ao deletar:", erro);
@@ -83,5 +119,5 @@ async function deletarCategoria(id) {
     }
 }
 
-// Inicializa a tabela assim que a tela abre
+// Inicializa a listagem ao carregar o script
 carregarCategorias();

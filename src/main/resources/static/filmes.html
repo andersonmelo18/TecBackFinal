@@ -10,7 +10,7 @@
         .form-row { display: flex; gap: 15px; } /* Para colocar campos lado a lado */
         .form-group { margin-bottom: 15px; flex: 1; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; color: #555; }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-family: inherit; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-family: inherit; background-color: #fff; }
         .btn-salvar { background: #E50914; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
         .btn-salvar:hover { background: #b20710; }
 
@@ -87,8 +87,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="categoria">Categoria Principal</label>
-                    <input type="text" id="categoria" required placeholder="Ex: Ação, Drama, Ficção Científica...">
+                    <label for="categoriaId">Categoria Principal</label>
+                    <select id="categoriaId" required>
+                        <option value="">Carregando categorias...</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
