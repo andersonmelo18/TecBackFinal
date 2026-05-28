@@ -60,4 +60,21 @@ public class FuncionarioService {
 
         return funcionarioMapper.toDTO(funcionarioSalvo);
     }
+
+    // =========================================================================
+    // NOVO MÉTODO: Adicionado para executar a exclusão física no Banco de Dados
+    // =========================================================================
+    @Transactional
+    public void deletar(Long id) {
+        log.info("Iniciando a exclusão do funcionário com ID: {}", id);
+
+        // Verifica antes se o ID realmente existe para evitar erros genéricos
+        if (!funcionarioRepository.existsById(id)) {
+            log.error("Tentativa de exclusão falhou. Funcionário ID {} não localizado.", id);
+            throw new CustomBeanException("Funcionário não encontrado no sistema.");
+        }
+
+        funcionarioRepository.deleteById(id);
+        log.info("Funcionário com ID {} removido com sucesso do banco de dados.", id);
+    }
 }

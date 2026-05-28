@@ -46,4 +46,23 @@ public class FuncionarioController {
             throw e;
         }
     }
+
+    // =========================================================================
+    // NOVO MÉTODO: Adicionado para receber e processar a exclusão do JavaScript
+    // =========================================================================
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        log.info("Recebida requisição DELETE para remover funcionário com ID: {}", id);
+        try {
+            // OBSERVAÇÃO: Confirme se o método no seu FuncionarioService
+            // se chama exatamente 'deletar' ou 'excluir'. Ajuste se necessário!
+            funcionarioService.deletar(id);
+
+            // Retorna o status 204 (No Content), padrão para deleções bem-sucedidas
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            log.error("Erro no fluxo do controlador ao deletar funcionário: {}", e.getMessage());
+            throw e;
+        }
+    }
 }

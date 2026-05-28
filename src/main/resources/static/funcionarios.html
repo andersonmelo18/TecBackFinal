@@ -18,9 +18,48 @@
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; }
         th { background-color: #f8f9fa; color: #333; font-weight: 600; }
+
+        .tabela-container td {
+            white-space: nowrap;
+        }
+
+        /* Botões de Ação */
+        .btn-detalhes { background: #007bff; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-right: 5px; font-weight: 600; }
+        .btn-detalhes:hover { background: #0056b3; }
         .btn-excluir { background: #dc3545; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
         .btn-excluir:hover { background: #c82333; }
-        .badge-cargo { background: #111; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+        .badge-cargo {
+            background: #e2e8f0; /* Fundo mais suave e moderno */
+            color: #1e293b; /* Texto escuro para dar leitura */
+            padding: 5px 12px;
+            border-radius: 12px; /* Bordas mais redondinhas (estilo pílula) */
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block; /* Mantém o formato de etiqueta */
+            white-space: nowrap; /* IMPEDE que o texto quebre no meio e desalinhe */
+            text-transform: uppercase; /* Deixa tudo em maiúsculo para ficar padronizado */
+        }
+        /* Estilo da Barra de Pesquisa */
+        .pesquisa-container { margin: 15px 0; position: relative; max-width: 400px; }
+        .pesquisa-container input { width: 100%; padding: 10px 40px 10px 15px; border: 1px solid #ccc; border-radius: 20px; font-size: 14px; outline: none; transition: 0.3s; }
+        .pesquisa-container input:focus { border-color: #E50914; box-shadow: 0 0 5px rgba(229, 9, 20, 0.2); }
+        .pesquisa-container .icone-lupa { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #777; pointer-events: none; }
+
+        /* JANELA MODAL FLUTUANTE */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 2000; }
+        .modal-content { background: #fff; padding: 25px; border-radius: 8px; max-width: 550px; width: 90%; box-shadow: 0 4px 15px rgba(0,0,0,0.2); position: relative; animation: transicaoModal 0.3s ease-out; }
+        .modal-header { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h3 { margin: 0; color: #111; }
+        .modal-close-btn { background: none; border: none; font-size: 22px; cursor: pointer; color: #aaa; }
+        .modal-close-btn:hover { color: #333; }
+        .grid-detalhes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 14px; }
+        .item-detalhe { border-bottom: 1px dashed #f0f0f0; padding-bottom: 5px; }
+        .item-detalhe strong { color: #555; display: block; font-size: 12px; text-transform: uppercase; }
+
+        @keyframes transicaoModal {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -42,7 +81,7 @@
             <p class="menu-titulo">🎥 Streaming</p>
             <ul>
                 <li><a href="filmes.html">Filmes</a></li>
-                <li><a href="categorias.html">Categories</a></li>
+                <li><a href="categorias.html">Categorias</a></li>
                 <li><a href="favoritos.html">Favoritos</a></li>
             </ul>
 
@@ -68,7 +107,7 @@
         <header class="topo-painel">
             <div>
                 <h1>Gestão de Funcionários</h1>
-                <p class="subtitulo">Cadastre a equipe que vai administrar a plataforma e a loja.</p>
+                <p class="subtitulo">Cadastre a equipe com integração ViaCEP automática.</p>
             </div>
         </header>
 
@@ -77,7 +116,7 @@
             <br>
             <form id="form-funcionario">
                 <div class="form-row">
-                    <div class="form-group">
+                    <div class="form-group" style="flex: 2;">
                         <label for="nome">Nome Completo</label>
                         <input type="text" id="nome" required placeholder="Ex: Maria da Silva">
                     </div>
@@ -101,7 +140,33 @@
                     </div>
                     <div class="form-group">
                         <label for="salario">Salário (R$)</label>
-                        <input type="number" id="salario" step="0.01" required placeholder="Ex: 3500.00">
+                        <input type="number" id="salario" step="0.01" placeholder="Ex: 3500.00">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="cep">CEP</label>
+                        <input type="text" id="cep" required placeholder="Ex: 58000000" maxlength="9">
+                    </div>
+                    <div class="form-group" style="flex: 2;">
+                        <label for="logradouro">Logradouro / Rua</label>
+                        <input type="text" id="logradouro" required placeholder="Preenchido automaticamente">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bairro">Bairro</label>
+                        <input type="text" id="bairro" required placeholder="Preenchido automaticamente">
+                    </div>
+                    <div class="form-group" style="flex: 2;">
+                        <label for="localidade">Localidade / Cidade</label>
+                        <input type="text" id="localidade" required placeholder="Preenchido automaticamente">
+                    </div>
+                    <div class="form-group" style="flex: 0.5;">
+                        <label for="uf">UF</label>
+                        <input type="text" id="uf" required placeholder="EX" maxlength="2">
                     </div>
                 </div>
 
@@ -111,6 +176,12 @@
 
         <section class="tabela-container">
             <h2>Equipe Cadastrada</h2>
+
+            <div class="pesquisa-container">
+                <input type="text" id="pesquisa-funcionario" placeholder="Buscar por nome, e-mail ou cargo...">
+                <span class="icone-lupa">🔍</span>
+            </div>
+
             <table>
                 <thead>
                 <tr>
@@ -118,7 +189,6 @@
                     <th>Nome</th>
                     <th>E-mail</th>
                     <th>Cargo</th>
-                    <th>Salário</th>
                     <th>Ações</th>
                 </tr>
                 </thead>
@@ -128,6 +198,17 @@
         </section>
 
     </main>
+</div>
+
+<div id="modal-funcionario" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Ficha do Funcionário</h3>
+            <button class="modal-close-btn" id="fechar-modal-x">&times;</button>
+        </div>
+        <div class="grid-detalhes" id="conteudo-modal-detalhes">
+        </div>
+    </div>
 </div>
 
 <script src="js/funcionarios.js"></script>
