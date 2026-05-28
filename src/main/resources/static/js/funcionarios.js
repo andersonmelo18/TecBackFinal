@@ -37,18 +37,13 @@ async function carregarFuncionarios() {
 document.getElementById('form-funcionario').addEventListener('submit', async function(event) {
     event.preventDefault(); // Impede a página de recarregar
 
-    // Coleta os valores do formulário
-    const nomeFunc = document.getElementById('nome').value;
-    const emailFunc = document.getElementById('email').value;
-    const cargoFunc = document.getElementById('cargo').value;
-    const salarioFunc = parseFloat(document.getElementById('salario').value);
-
-    // Monta o JSON (ajuste os nomes das chaves conforme os atributos da sua classe Funcionario.java)
+    // Monta o JSON capturando os valores EXATOS da tela neste momento, INCLUINDO A SENHA
     const novoFuncionario = {
-        nome: nomeFunc,
-        email: emailFunc,
-        cargo: cargoFunc,
-        salario: salarioFunc
+        nome: document.getElementById('nome').value,
+        email: document.getElementById('email').value,
+        cargo: document.getElementById('cargo').value,
+        salario: parseFloat(document.getElementById('salario').value),
+        senha: document.getElementById('senha').value // <--- CAMPO DE SENHA ADICIONADO AQUI
     };
 
     try {

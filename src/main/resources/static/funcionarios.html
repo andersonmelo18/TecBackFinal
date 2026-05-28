@@ -10,7 +10,7 @@
         .form-row { display: flex; gap: 15px; }
         .form-group { margin-bottom: 15px; flex: 1; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; color: #555; }
-        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-family: inherit; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-family: inherit; box-sizing: border-box; }
         .btn-salvar { background: #E50914; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
         .btn-salvar:hover { background: #b20710; }
 
@@ -42,7 +42,7 @@
             <p class="menu-titulo">🎥 Streaming</p>
             <ul>
                 <li><a href="filmes.html">Filmes</a></li>
-                <li><a href="categorias.html">Categorias</a></li>
+                <li><a href="categorias.html">Categories</a></li>
                 <li><a href="favoritos.html">Favoritos</a></li>
             </ul>
 
@@ -77,13 +77,20 @@
             <br>
             <form id="form-funcionario">
                 <div class="form-row">
-                    <div class="form-group" style="flex: 2;">
+                    <div class="form-group">
                         <label for="nome">Nome Completo</label>
                         <input type="text" id="nome" required placeholder="Ex: Maria da Silva">
                     </div>
-                    <div class="form-group">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group" style="flex: 2;">
                         <label for="email">E-mail Corporativo</label>
                         <input type="email" id="email" required placeholder="maria@iespflix.com">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="senha">Senha de Acesso</label>
+                        <input type="password" id="senha" required placeholder="Digite a senha">
                     </div>
                 </div>
 
