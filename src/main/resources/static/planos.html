@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assinaturas - iespflix</title>
+    <title>Planos - iespflix</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
         .card-form { background: #fff; padding: 20px; border-radius: 8px; margin-bottom: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .form-row { display: flex; gap: 15px; }
         .form-group { margin-bottom: 15px; flex: 1; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 14px; color: #555; }
-        .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; background: #fff; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; font-family: inherit; }
         .btn-salvar { background: #E50914; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; }
         .btn-salvar:hover { background: #b20710; }
         .tabela-container { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); overflow-x: auto; }
@@ -35,8 +35,8 @@
             </ul>
             <p class="menu-titulo">🛒 E-commerce & Vendas</p>
             <ul>
-                <li><a href="assinaturas.html" class="active">Assinaturas</a></li>
-                <li><a href="planos.html">Planos</a></li>
+                <li><a href="assinaturas.html">Assinaturas</a></li>
+                <li><a href="planos.html" class="active">Planos</a></li>
                 <li><a href="produtos.html">Produtos</a></li>
                 <li><a href="pedidos.html">Pedidos</a></li>
                 <li><a href="item-pedido.html">Itens do Pedido</a></li>
@@ -53,53 +53,43 @@
     <main class="conteudo-principal">
         <header class="topo-painel">
             <div>
-                <h1>Assinaturas</h1>
-                <p class="subtitulo">Contrate planos para os clientes da plataforma.</p>
+                <h1>Planos Disponíveis</h1>
+                <p class="subtitulo">Cadastre os planos que poderão ser assinados pelos clientes.</p>
             </div>
         </header>
 
         <section class="card-form">
-            <h2>Contratar Plano</h2><br>
-            <form id="form-assinatura">
+            <h2>Cadastrar Novo Plano</h2><br>
+            <form id="form-plano">
                 <div class="form-row">
-                    <div class="form-group">
-                        <label for="usuarioId">Cliente</label>
-                        <select id="usuarioId" required>
-                            <option value="">Carregando clientes...</option>
-                        </select>
+                    <div class="form-group" style="flex:2;">
+                        <label for="nome">Nome do Plano</label>
+                        <input type="text" id="nome" required placeholder="Ex: Basic, Standard, Premium">
                     </div>
                     <div class="form-group">
-                        <label for="planoId">Plano</label>
-                        <select id="planoId" required>
-                            <option value="">Carregando planos...</option>
-                        </select>
+                        <label for="preco">Preço Mensal (R$)</label>
+                        <input type="number" id="preco" step="0.01" required placeholder="Ex: 29.90">
                     </div>
                 </div>
-                <div id="resumo-plano"></div>
-                <br>
-                <button type="submit" class="btn-salvar">Assinar Plano</button>
+                <div class="form-group">
+                    <label for="descricao">Descrição</label>
+                    <input type="text" id="descricao" placeholder="Ex: Full HD + 2 telas simultâneas">
+                </div>
+                <button type="submit" class="btn-salvar">Salvar Plano</button>
             </form>
         </section>
 
         <section class="tabela-container">
-            <h2>Assinaturas Registradas</h2>
+            <h2>Planos Cadastrados</h2>
             <table>
                 <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Cliente</th>
-                    <th>Plano</th>
-                    <th>Descrição</th>
-                    <th>Preço Contratado</th>
-                    <th>Status</th>
-                    <th>Ações</th>
-                </tr>
+                <tr><th>ID</th><th>Nome</th><th>Descrição</th><th>Preço</th><th>Status</th><th>Ações</th></tr>
                 </thead>
-                <tbody id="tabela-assinaturas"></tbody>
+                <tbody id="tabela-planos"></tbody>
             </table>
         </section>
     </main>
 </div>
-<script src="js/assinaturas.js"></script>
+<script src="js/planos.js"></script>
 </body>
 </html>

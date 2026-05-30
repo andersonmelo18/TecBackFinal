@@ -1,18 +1,12 @@
-// URL apontando para o seu CategoriaController no Spring Boot
 const URL_API = '/categorias';
 
-// Cache local para guardar os dados das categorias (importante para os modais)
 let cacheCategorias = [];
 
-// ==========================================
-// 1. CARREGAR E RENDERIZAR TABELA (GET)
-// ==========================================
 async function carregarCategorias() {
     try {
         const resposta = await fetch(URL_API);
         const dados = await resposta.json();
 
-        // Armazena no cache tratando paginação do Spring (Pageable) se houver
         cacheCategorias = dados.content ? dados.content : dados;
 
         const corpoTabela = document.getElementById('tabela-categorias');
@@ -26,7 +20,6 @@ async function carregarCategorias() {
         cacheCategorias.forEach(categoria => {
             const linha = document.createElement('tr');
 
-            // Tratamento seguro de strings para evitar que aspas simples/duplas quebrem o HTML do onclick
             const descricaoTratada = (categoria.descricao || "Sem descrição informada.")
                 .replace(/\\/g, '\\\\')
                 .replace(/'/g, "\\'")
@@ -47,9 +40,6 @@ async function carregarCategorias() {
     }
 }
 
-// ==========================================
-// 2. CONTROLAR O MODAL DE DETALHES
-// ==========================================
 const modal = document.getElementById('modal-descricao');
 const btnFecharModal = document.getElementById('btn-fechar-modal');
 
@@ -59,15 +49,11 @@ function abrirModalDescricao(nome, descricao) {
     modal.style.display = 'flex';
 }
 
-// Eventos para fechar o modal clicando no 'X' ou fora da caixa branca
 btnFecharModal.addEventListener('click', () => modal.style.display = 'none');
 window.addEventListener('click', (event) => {
     if (event.target === modal) modal.style.display = 'none';
 });
 
-// ==========================================
-// 3. SALVAR NOVA CATEGORIA (POST)
-// ==========================================
 document.getElementById('form-categoria').addEventListener('submit', async function(event) {
     event.preventDefault();
 
@@ -89,7 +75,7 @@ document.getElementById('form-categoria').addEventListener('submit', async funct
         if (resposta.ok) {
             alert("Categoria salva com sucesso!");
             document.getElementById('form-categoria').reset();
-            carregarCategorias(); // Recarrega a tabela e atualiza o cache
+            carregarCategorias();
         } else {
             const erroApi = await resposta.text();
             alert("Erro ao salvar a categoria: " + erroApi);
@@ -100,9 +86,6 @@ document.getElementById('form-categoria').addEventListener('submit', async funct
     }
 });
 
-// ==========================================
-// 4. DELETAR CATEGORIA (DELETE)
-// ==========================================
 async function deletarCategoria(id) {
     if (confirm(`Tem certeza que deseja excluir a categoria ID #${id}?`)) {
         try {
@@ -119,5 +102,4 @@ async function deletarCategoria(id) {
     }
 }
 
-// Inicializa a listagem ao carregar o script
 carregarCategorias();
