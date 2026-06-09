@@ -107,13 +107,19 @@ document.getElementById('form-filme').addEventListener('submit', async function(
     const anoFilme = parseInt(document.getElementById('anoLancamento').value, 10);
     const sinopseFilme = document.getElementById('sinopse').value.trim();
 
+    // ---> NOVA LINHA: Captura o valor do campo de gênero do HTML
+    const generoFilme = document.getElementById('genero').value;
+
     // Monta o payload JSON compatível com o DTO/Entity do seu Spring Boot
     const novoFilme = {
         titulo: tituloFilme,
         sinopse: sinopseFilme,
         // Converte o ano digitado (ex: 2026) na string padrão do banco (ex: "2026-01-01")
         dataLancamento: `${document.getElementById('anoLancamento').value}-01-01`,
-        categoriaId: parseInt(idCategoriaSelecionada, 10)
+        categoriaId: parseInt(idCategoriaSelecionada, 10),
+
+        // ---> NOVA LINHA: Adiciona o gênero no JSON que vai para o backend
+        genero: generoFilme
     };
 
     try {
